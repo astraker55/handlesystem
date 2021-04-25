@@ -1,9 +1,12 @@
-from app import app
-from flask import jsonify
+from flask import jsonify, request, Blueprint
+import sys
+from . import app
 
 
-@app.route('/')
-@app.route('/<name>')
+app_routes = Blueprint('app_bp', __name__)
+
+
+@app_routes.route('/')
+@app_routes.route('/<name>')
 def index(name=None):
     return jsonify({"msg":"Hello, Aviahackathon 2021"})
-    

@@ -5,13 +5,16 @@
 #
 #
 import json
-from app import app
+import sys
 # from .db_init import conn
-from flask import request, jsonify
+from flask import request, jsonify, make_response, after_this_request, Blueprint
+from flask_cors import cross_origin
 from datetime import datetime
 from psycopg2 import sql
 from psycopg2.extras import RealDictCursor
 
+
+users_api = Blueprint('users', __name__)
 
 #@app.route('/api/user-<id: int>/showpossibleresourses', methods=["GET"])
 # @app.login_required
@@ -25,10 +28,11 @@ from psycopg2.extras import RealDictCursor
     #return json.dumps(result, indent=4, ensure_ascii=False), 200
 
 
-@app.route('/api/user/<userid>/create_request', methods=["POST"])
+@users_api.route('/api/user/<userid>/create_request', methods=["POST"])
+@cross_origin(methods=["POST"])
 def create_request(userid):
-    body = json.loads(request.data)
+    body = request.get_json()
     body["userid"] = userid
     body["request_time"] = datetime.now()
-    
-    return body, 200
+    resp = make_response(body)
+    return resp, 200
